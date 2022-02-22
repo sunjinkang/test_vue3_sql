@@ -1,0 +1,35 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "maxNumberOfProblems": 10000,
+  "dictionaries": [
+    "typescript",
+    "node",
+    "html",
+    "css",
+    "less",
+    "dev-env"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "dev-env",
+      "path": "./dictionaries/dev-env.txt"
+    }
+  ],
+  "flagWords": [],
+  "ignorePaths": [
+    "src/asset/**",
+    "node_modules/**",
+    ".git/**",
+    "package.json",
+    "**/package.json",
+    "**/cSpell.json",
+    "**/tslint.json",
+    "**/tsconfig.json",
+    ".vscode/**"
+  ],
+  "words": [
+    "vite",
+    "vitejs"
+  ]
+}

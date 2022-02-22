@@ -1,7 +1,20 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import eslint from 'vite-plugin-eslint';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()]
-})
+  base: '/',
+  plugins: [vue(), eslint()],
+  server: {
+    port: 5200,
+    host: '0.0.0.0',
+    open: true,
+    proxy: {
+      '/v': {
+        target: 'http://10.186.62.39:10000',
+      },
+    },
+    cors: true,
+  },
+});
