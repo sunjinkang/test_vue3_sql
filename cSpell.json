@@ -29,6 +29,7 @@
     ".vscode/**"
   ],
   "words": [
+    "pinia",
     "vite",
     "vitejs"
   ]

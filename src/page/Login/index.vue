@@ -35,7 +35,9 @@ import {
     ref,
 } from 'vue';
 import type { ElForm } from 'element-plus';
+import { useRouter } from 'vue-router';
 import user from '../../api/user';
+import { useUserStore } from '../../store/user';
 export default defineComponent({
     setup() {
         type FormInstance = InstanceType<typeof ElForm>;
@@ -62,6 +64,10 @@ export default defineComponent({
             ],
         });
 
+        const userStore = useUserStore();
+
+        const router = useRouter();
+
         const login = (formEl: FormInstance | undefined) => {
             if (!formEl) return
             formEl.validate((valid) => {
@@ -73,9 +79,8 @@ export default defineComponent({
                     })
                     .then((res: any) => {
                         if (res.data.code === 0) {
-                            // dispatch(updateToken({ token: res.data.data?.token ?? '' }));
-                            // history.push('/');
-                            window.location.href = '/';
+                            userStore.updateToken(res.data.data?.token ?? '');
+                            router.push('/platform/user');
                         }
                     });
                 }

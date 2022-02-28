@@ -3,6 +3,7 @@ const router: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'Login',
+        // redirect: '/login',
         component: () => import('../page/Login/index.vue'),
     },
     {
