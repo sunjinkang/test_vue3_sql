@@ -1,4 +1,5 @@
 import { RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router';
+import Container from '../components/Container/index.vue';
 const router: Array<RouteRecordRaw> = [
     {
         path: '/',
@@ -15,6 +16,7 @@ const router: Array<RouteRecordRaw> = [
         path: '/platform',
         name: 'PlatformManagement',
         redirect: '/platform/user',
+        component: Container,
         children: [
             {
                 path: 'user',
