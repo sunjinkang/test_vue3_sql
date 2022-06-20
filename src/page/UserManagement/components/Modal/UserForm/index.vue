@@ -1,58 +1,57 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title="isUpdate : '修改用户' : '创建用户'"
-    width="30%"
+    :title="isUpdate ? '修改用户' : '创建用户'"
     :before-close="handleClose"
-    ref="userFormRef"
-    :model="userForm"
-    :rules="rules"
   >
-    <el-form :model="form" label-width="120px">
-      <el-form-item label="用户名">
+    <el-form :model="userForm" ref="userFormRef" :rules="rules" label-width="120px">
+      <el-form-item label="用户名" prop="username">
         <el-input v-model="userForm.username" :disabled="isUpdate" />
       </el-form-item>
-      <el-form-item label="密码" v-if="!isUpdate">
+      <el-form-item label="密码" v-if="!isUpdate" prop="password">
         <el-input v-model="userForm.password" type="password" />
       </el-form-item>
-      <el-form-item label="确认密码" v-if="!isUpdate">
+      <el-form-item label="确认密码" v-if="!isUpdate" prop="passwordConfirm">
         <el-input v-model="userForm.passwordConfirm" type="password" />
       </el-form-item>
-      <el-form-item label="邮箱">
+      <el-form-item label="邮箱" prop="email">
         <el-input v-model="userForm.email" />
       </el-form-item>
-      <el-form-item label="微信id">
+      <el-form-item label="微信id" prop="wechat">
         <el-input v-model="userForm.wechat" />
       </el-form-item>
-      <el-form-item label="角色">
+      <el-form-item label="角色" prop="roleNameList">
         <el-input v-model="userForm.roleNameList" />
       </el-form-item>
-      <el-form-item label="所属用户组">
+      <el-form-item label="所属用户组" prop="userGroupList">
         <el-input v-model="userForm.userGroupList" />
       </el-form-item>
-      <el-form-item label="所属用户组" v-if="isUpdate && !isAdmin">
+      <el-form-item label="所属用户组" v-if="isUpdate && !isAdmin" prop="disabled">
         <el-switch v-model="userForm.disabled" />
       </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >Confirm</el-button
-        >
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleSubmit(userFormRef)">
+          确认
+        </el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
-import type { FormRules } from 'element-plus';
+import { defineComponent, reactive, toRefs, ref } from 'vue';
+import type { FormInstance, FormRules } from 'element-plus';
+import type { ElForm } from 'element-plus';
 import { nameRule } from '../../../../../utils/FormRule';
 export default defineComponent({
   name: 'UserForm',
-  props: ['isUpdate', 'isAdmin', 'userFormRef', 'dialogVisible'],
-  setup(props) {
-    
+  props: ['isUpdate', 'isAdmin', 'dialogVisible'],
+  emits: ['handleGetData'],
+  setup(props, context) {
+    // type FormInstance = InstanceType<typeof ElForm>;
+    const userFormRef = ref<FormInstance>();
     const userForm = reactive({
       username: '',
       password: '',
@@ -112,13 +111,24 @@ export default defineComponent({
       ],
     });
 
-    const handleClose = () => {}
+    const handleClose = () => {};
+
+    const handleSubmit = (formEl: FormInstance | undefined) => {
+      if (!formEl) return
+      formEl.validate((valid: boolean) => {
+        if (valid) {
+          context.emit('handleGetData', userForm);
+        }
+      })
+    }
 
     return {
       ...toRefs(userForm),
+      userFormRef,
       handleClose,
       userForm,
       rules,
+      handleSubmit,
     }
   }
 });

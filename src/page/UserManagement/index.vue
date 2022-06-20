@@ -17,7 +17,7 @@
   </section>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import { defineComponent, onMounted, reactive, toRefs } from 'vue';
 import PageHeader from '../../components/PageHeader/index.vue';
 import UserTable from './components/UserTable/index.vue';
 import SearchContent from './components/SearchContent/index.vue';
@@ -47,6 +47,10 @@ export default defineComponent({
     const handleCreateUser = () => {
       state.visible = true;
     }
+
+    onMounted(() => {
+      handleGetUserList();
+    });
 
     return {
       ...toRefs(state),
