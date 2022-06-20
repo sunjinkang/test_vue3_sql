@@ -7,10 +7,9 @@ import { ElNotification } from 'element-plus';
 
 const ApiBase = axios.create();
 
-const userStore = useUserStore();
-
 const authInvalid = () => {
-  userStore.updateUser({ username: '', role: '' })
+  const userStore = useUserStore();
+  userStore.updateUser({ username: '', role: '' });
   userStore.updateToken('');
   const history = createBrowserHistory();
   history.push('/login');
@@ -53,9 +52,7 @@ ApiBase.interceptors.response.use(
       const response = error?.response;
       ElNotification({
         title: '错误',
-        message: response?.data?.message ??
-        response?.statusText ??
-        '未知',
+        message: response?.data?.message ?? response?.statusText ?? '未知',
         type: 'error',
       });
     }
@@ -66,6 +63,7 @@ ApiBase.interceptors.response.use(
 const doNotAddAuthRequest = ['/login'];
 
 ApiBase.interceptors.request.use((config) => {
+  const userStore = useUserStore();
   if (doNotAddAuthRequest.some((url) => config.url?.includes(url))) {
     return config;
   }
