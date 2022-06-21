@@ -32,7 +32,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button @click="handleClose(userFormRef)">取消</el-button>
         <el-button type="primary" @click="handleSubmit(userFormRef)">
           确认
         </el-button>
@@ -41,18 +41,19 @@
   </el-dialog>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, ref } from 'vue';
+import { defineComponent, reactive, toRefs, ref, watch } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
-import type { ElForm } from 'element-plus';
 import { nameRule } from '../../../../../utils/FormRule';
+import { useUserManageStore } from '../../../../../store/userManage';
+import { ModalName } from '../../../../../data/ModalName';
 export default defineComponent({
   name: 'UserForm',
-  props: ['isUpdate', 'isAdmin', 'dialogVisible'],
+  props: ['isUpdate', 'isAdmin', 'dialogVisible', 'selectUser'],
   emits: ['handleGetData'],
   setup(props, context) {
-    // type FormInstance = InstanceType<typeof ElForm>;
     const userFormRef = ref<FormInstance>();
-    const userForm = reactive({
+    const useUserManage = useUserManageStore();
+    let userForm = reactive({
       username: '',
       password: '',
       passwordConfirm: '',
@@ -111,16 +112,32 @@ export default defineComponent({
       ],
     });
 
-    const handleClose = () => {};
+    const handleClose = (formEl: FormInstance | undefined) => {
+      useUserManage.updateModalStatus({
+        modalName: !props.isUpdate ? ModalName.Add_User : ModalName.Update_User,
+        status: false,
+      });
+      if (!formEl) return;
+      formEl.resetFields();
+    };
 
     const handleSubmit = (formEl: FormInstance | undefined) => {
-      if (!formEl) return
+      if (!formEl) return;
       formEl.validate((valid: boolean) => {
         if (valid) {
           context.emit('handleGetData', userForm);
         }
-      })
+      });
     }
+
+    watch([() => props.dialogVisible, () => props.selectUser], (val, preVal) => {
+      if (val[0] !== preVal[0] && val[0] && val[1]) {
+        userForm = { ...val[1] };
+      }
+    }, {
+      immediate: true,
+      deep: true
+    });
 
     return {
       ...toRefs(userForm),

@@ -13,11 +13,11 @@
         <UserTable :tableData="tableData" />
       </div>
     </el-card>
-    <AddUser :visible="visible" />
+    <AddUser />
   </section>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs } from 'vue';
+import { defineComponent, onMounted, reactive, toRefs, watch } from 'vue';
 import PageHeader from '../../components/PageHeader/index.vue';
 import UserTable from './components/UserTable/index.vue';
 import SearchContent from './components/SearchContent/index.vue';
@@ -26,12 +26,14 @@ import {
   Refresh
 } from '@element-plus/icons-vue';
 import UserService from '../../api/user/index';
+import { useUserManageStore } from '../../store/userManage';
+import { ModalName } from '../../data/ModalName';
 export default defineComponent({
   components: { UserTable, PageHeader, SearchContent, AddUser },
   setup() {
+    const useUserManage = useUserManageStore();
     let state = reactive({
       tableData: [],
-      visible: false
     });
 
     const handleGetUserList = () => {
@@ -39,17 +41,38 @@ export default defineComponent({
         page_index: 1,
         page_size: 10
       }).then((res) => {
-        console.log(res.data);
         state.tableData = res.data?.data ?? [];
-      })
+      });
     };
 
     const handleCreateUser = () => {
-      state.visible = true;
+      useUserManage.updateModalStatus({
+        modalName: ModalName.Add_User,
+        status: true,
+      });
     }
+
+    const handleInitModalStatus = () => {
+      useUserManage.initModalStatus({
+        [ModalName.Add_User]: false,
+        [ModalName.Update_User]: false,
+        [ModalName.Update_User_Password]: false,
+      });
+    };
+
+    watch(() => useUserManage.refreshTable,
+    (val, preVal) => {
+      if (val !== preVal) {
+        handleGetUserList();
+      }
+    }, {
+      deep: true,
+      immediate: true,
+    });
 
     onMounted(() => {
       handleGetUserList();
+      handleInitModalStatus();
     });
 
     return {
