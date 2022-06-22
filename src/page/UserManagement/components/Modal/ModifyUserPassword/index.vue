@@ -94,6 +94,7 @@ export default defineComponent({
                 type: 'success',
               });
               handleClose(undefined);
+              useUserManage.updateRefreshStatus();
             }
           });
         }

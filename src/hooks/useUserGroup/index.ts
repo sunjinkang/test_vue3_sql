@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { reactive, toRefs } from 'vue';
 import user_group from '../../api/user_group';
 import { ResponseCode } from '../../data/common';
 
@@ -21,7 +21,7 @@ const useUserGroup = () => {
   };
 
   return {
-    userGroupList,
+    ...toRefs(userGroupList),
     updateUserGroupList,
   };
 };

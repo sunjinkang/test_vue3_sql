@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { reactive, toRefs } from 'vue';
 import roleService from '../../api/role';
 import { ResponseCode } from '../../data/common';
 
@@ -21,7 +21,7 @@ const useRole = () => {
   };
 
   return {
-    roleList,
+    ...toRefs(roleList),
     updateRoleList,
   };
 };

@@ -21,12 +21,26 @@
         <el-input v-model="userForm.wechat" />
       </el-form-item>
       <el-form-item label="角色" prop="roleNameList">
-        <el-input v-model="userForm.roleNameList" />
+        <el-select v-model="userForm.roleNameList" class="m-2" placeholder="请选择角色">
+          <el-option
+            v-for="item in roleList"
+            :key="item.role_name"
+            :label="item.role_name"
+            :value="item.role_name"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="所属用户组" prop="userGroupList">
-        <el-input v-model="userForm.userGroupList" />
+        <el-select v-model="userForm.userGroupList" class="m-2" placeholder="请选择所属用户组">
+          <el-option
+            v-for="item in userGroupList"
+            :key="item.user_group_name"
+            :label="item.user_group_name"
+            :value="item.user_group_name"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="所属用户组" v-if="isUpdate && !isAdmin" prop="disabled">
+      <el-form-item label="禁用用户" v-if="isUpdate && !isAdmin" prop="disabled">
         <el-switch v-model="userForm.disabled" />
       </el-form-item>
     </el-form>
@@ -46,6 +60,9 @@ import type { FormInstance, FormRules } from 'element-plus';
 import { nameRule } from '../../../../../utils/FormRule';
 import { useUserManageStore } from '../../../../../store/userManage';
 import { ModalName } from '../../../../../data/ModalName';
+import useRole from '../../../../../hooks/useRole';
+import useUserGroup from '../../../../../hooks/useUserGroup';
+import { IRoleTipResV1 } from '../../../../../api/common';
 export default defineComponent({
   name: 'UserForm',
   props: ['isUpdate', 'isAdmin', 'dialogVisible', 'selectUser'],
@@ -63,6 +80,14 @@ export default defineComponent({
       userGroupList: [],
       disabled: '',
     });
+    const {
+      list: roleList,
+      updateRoleList,
+    } = useRole();
+    const {
+      group: userGroupList,
+      updateUserGroupList,
+    } = useUserGroup();
 
     const nameRules = () => {
       const baseRules = [
@@ -133,6 +158,8 @@ export default defineComponent({
     watch([() => props.dialogVisible, () => props.selectUser], (val, preVal) => {
       if (val[0] !== preVal[0] && val[0] && val[1]) {
         userForm = { ...val[1] };
+        updateRoleList();
+        updateUserGroupList();
       }
     }, {
       immediate: true,
@@ -146,6 +173,8 @@ export default defineComponent({
       userForm,
       rules,
       handleSubmit,
+      roleList,
+      userGroupList,
     }
   }
 });

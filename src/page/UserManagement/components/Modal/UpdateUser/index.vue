@@ -10,6 +10,7 @@ import { ResponseCode, SystemRole } from '../../../../../data/common';
 import { ModalName } from '../../../../../data/ModalName';
 import userService from '../../../../../api/user';
 import { ElMessage } from 'element-plus';
+import { IUpdateUserV1Params } from '../../../../../api/user/index.d';
 export default defineComponent({
   name: 'UpdateUser',
   components: { UserForm },
@@ -23,20 +24,30 @@ export default defineComponent({
     });
 
     const handleGetData = (data: any) => {
-      userService.createUserV1({
+      const params: IUpdateUserV1Params = {
         user_name: data.username,
-        user_password: data.password,
-        email: data.email,
         role_name_list: data.roleNameList,
         user_group_name_list: data.userGroupList,
         wechat_id: data.wechat,
-      })
+      };
+      if (!!data.email) {
+        params.email = data.email;
+      }
+      if (data.username !== 'admin') {
+        params.is_disabled = !!data.disabled;
+      }
+      userService.updateUserV1(params)
       .then((res) => {
         if (res.data.code === ResponseCode.SUCCESS) {
           ElMessage({
             message: `修改用户${data.username}成功！`,
             type: 'success',
           });
+          useUserManage.updateModalStatus({
+            modalName: ModalName.Update_User,
+            status: false,
+          });
+          useUserManage.updateRefreshStatus();
         }
       })
     };

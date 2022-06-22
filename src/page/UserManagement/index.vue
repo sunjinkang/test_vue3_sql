@@ -14,6 +14,8 @@
       </div>
     </el-card>
     <AddUser />
+    <UpdateUser />
+    <ModifyUserPassword />
   </section>
 </template>
 <script lang="ts">
@@ -22,6 +24,8 @@ import PageHeader from '../../components/PageHeader/index.vue';
 import UserTable from './components/UserTable/index.vue';
 import SearchContent from './components/SearchContent/index.vue';
 import AddUser from './components/Modal/AddUser/index.vue';
+import UpdateUser from './components/Modal/UpdateUser/index.vue';
+import ModifyUserPassword from './components/Modal/ModifyUserPassword/index.vue';
 import {
   Refresh
 } from '@element-plus/icons-vue';
@@ -29,7 +33,7 @@ import UserService from '../../api/user/index';
 import { useUserManageStore } from '../../store/userManage';
 import { ModalName } from '../../data/ModalName';
 export default defineComponent({
-  components: { UserTable, PageHeader, SearchContent, AddUser },
+  components: { UserTable, PageHeader, SearchContent, AddUser, UpdateUser, ModifyUserPassword },
   setup() {
     const useUserManage = useUserManageStore();
     let state = reactive({

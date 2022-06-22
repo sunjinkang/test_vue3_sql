@@ -2,7 +2,7 @@
   <UserForm :dialogVisible="visible" :isUpdate="false" :isAdmin="isAdmin" @handleGetData="handleGetData" />
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, toRefs, watch } from 'vue';
+import { defineComponent, reactive, toRefs, watch } from 'vue';
 import UserForm from '../UserForm/index.vue';
 import { useUserStore } from '../../../../../store/user';
 import { useUserManageStore } from '../../../../../store/userManage';
@@ -10,8 +10,6 @@ import { ResponseCode, SystemRole } from '../../../../../data/common';
 import { ModalName } from '../../../../../data/ModalName';
 import userService from '../../../../../api/user';
 import { ElMessage } from 'element-plus';
-import EventEmitter from '../../../../../utils/EventEmitter';
-import EmitterKey from '../../../../../data/EmitterKey';
 export default defineComponent({
   name: 'AddUser',
   components: { UserForm },
@@ -24,7 +22,6 @@ export default defineComponent({
     });
 
     const handleGetData = (data: any) => {
-      console.log(data);
       userService.createUserV1({
         user_name: data.username,
         user_password: data.password,
@@ -35,19 +32,24 @@ export default defineComponent({
       })
       .then((res) => {
         if (res.data.code === ResponseCode.SUCCESS) {
-          close();
           ElMessage({
             message: `创建用户${data.username}成功！`,
             type: 'success',
           });
-          EventEmitter.emit(EmitterKey.Refresh_User_list);
+          useUserManage.updateModalStatus({
+            modalName: ModalName.Add_User,
+            status: false,
+          });
+          useUserManage.updateRefreshStatus();
         }
       })
     };
 
     watch(() => useUserManage.modalStatus[ModalName.Add_User],
     (val, preVal) => {
-      user.visible = val !== preVal && val;
+      if (val !== preVal && val) {
+        user.visible = true;
+      }
     }, {
       deep: true,
       immediate: true,
@@ -55,7 +57,7 @@ export default defineComponent({
 
     return {
       ...toRefs(user),
-      handleGetData
+      handleGetData,
     };
   },
 });
