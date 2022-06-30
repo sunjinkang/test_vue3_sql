@@ -1,12 +1,15 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-// import eslint from 'vite-plugin-eslint';
+import eslint from 'vite-plugin-eslint';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: '/',
-  plugins: [vue()],
-  // plugins: [vue(), eslint()],
+  plugins: [vue(), eslint()],
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json'],
+    alias: {},
+  },
   server: {
     port: 5200,
     host: '0.0.0.0',
