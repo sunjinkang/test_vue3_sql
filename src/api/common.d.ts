@@ -1,5 +1,6 @@
 import {
   AuditPlanParamResV1TypeEnum,
+  AuditPlanReportResV1AuditLevelEnum,
   AuditTaskResV1AuditLevelEnum,
   AuditTaskResV1SqlSourceEnum,
   AuditTaskResV1StatusEnum,
@@ -52,9 +53,15 @@ export interface IAuditPlanParamResV1 {
 }
 
 export interface IAuditPlanReportResV1 {
+  audit_level?: AuditPlanReportResV1AuditLevelEnum;
+
   audit_plan_report_id?: string;
 
   audit_plan_report_timestamp?: string;
+
+  pass_rate?: number;
+
+  score?: number;
 }
 
 export interface IAuditPlanReportSQLResV1 {
@@ -116,6 +123,8 @@ export interface IAuditTaskResV1 {
 
   pass_rate?: number;
 
+  score?: number;
+
   sql_source?: AuditTaskResV1SqlSourceEnum;
 
   status?: AuditTaskResV1StatusEnum;
@@ -161,6 +170,16 @@ export interface IBatchCancelWorkflowsReqV1 {
   workflow_ids?: string[];
 }
 
+export interface ICheckLicenseResV1 {
+  code?: number;
+
+  content?: string;
+
+  license?: ILicenseItem[];
+
+  message?: string;
+}
+
 export interface ICloneRuleTemplateReqV1 {
   desc?: string;
 
@@ -194,6 +213,8 @@ export interface ICreateAuditWhitelistReqV1 {
 }
 
 export interface ICreateInstanceReqV1 {
+  additional_params?: IInstanceAdditionalParamReqV1[];
+
   db_host?: string;
 
   db_password?: string;
@@ -207,6 +228,8 @@ export interface ICreateInstanceReqV1 {
   desc?: string;
 
   instance_name?: string;
+
+  maintenance_times?: IMaintenanceTimeReqV1[];
 
   role_name_list?: string[];
 
@@ -237,14 +260,28 @@ export interface ICreateRuleTemplateReqV1 {
   rule_template_name?: string;
 }
 
+export interface ICreateUserGroupReqV1 {
+  role_name_list?: string[];
+
+  user_group_desc?: string;
+
+  user_group_name?: string;
+
+  user_name_list?: string[];
+}
+
 export interface ICreateUserReqV1 {
   email?: string;
 
   role_name_list?: string[];
 
+  user_group_name_list?: string[];
+
   user_name?: string;
 
   user_password?: string;
+
+  wechat_id?: string;
 }
 
 export interface ICreateWorkflowReqV1 {
@@ -387,7 +424,17 @@ export interface IGetDriversResV1 {
   message?: string;
 }
 
+export interface IGetInstanceAdditionalMetasResV1 {
+  code?: number;
+
+  data?: IInstanceAdditionalMetaV1[];
+
+  message?: string;
+}
+
 export interface IGetInstanceConnectableReqV1 {
+  additional_params?: IInstanceAdditionalParamReqV1[];
+
   db_type?: string;
 
   host?: string;
@@ -453,6 +500,24 @@ export interface IGetLDAPConfigurationResV1 {
   code?: number;
 
   data?: ILDAPConfigurationResV1;
+
+  message?: string;
+}
+
+export interface IGetLicenseResV1 {
+  code?: number;
+
+  content?: string;
+
+  license?: ILicenseItem[];
+
+  message?: string;
+}
+
+export interface IGetOperationsResV1 {
+  code?: number;
+
+  data?: IOperationResV1[];
 
   message?: string;
 }
@@ -541,6 +606,24 @@ export interface IGetUserDetailResV1 {
   message?: string;
 }
 
+export interface IGetUserGroupTipsResV1 {
+  code?: number;
+
+  data?: IUserGroupTipListItem[];
+
+  message?: string;
+}
+
+export interface IGetUserGroupsResV1 {
+  code?: number;
+
+  data?: IUserGroupListItemResV1[];
+
+  message?: string;
+
+  total_nums?: number;
+}
+
 export interface IGetUserLoginResV1 {
   code?: number;
 
@@ -565,6 +648,14 @@ export interface IGetUsersResV1 {
   message?: string;
 
   total_nums?: number;
+}
+
+export interface IGetWeChatConfigurationResV1 {
+  code?: number;
+
+  data?: IWeChatConfigurationResV1;
+
+  message?: string;
 }
 
 export interface IGetWorkflowResV1 {
@@ -611,6 +702,28 @@ export interface IGetWorkflowsResV1 {
   total_nums?: number;
 }
 
+export interface IInstanceAdditionalMetaV1 {
+  db_type?: string;
+
+  params?: IInstanceAdditionalParamResV1[];
+}
+
+export interface IInstanceAdditionalParamReqV1 {
+  name?: string;
+
+  value?: string;
+}
+
+export interface IInstanceAdditionalParamResV1 {
+  description?: string;
+
+  name?: string;
+
+  type?: string;
+
+  value?: string;
+}
+
 export interface IInstanceConnectableResV1 {
   connect_error_message?: string;
 
@@ -618,6 +731,8 @@ export interface IInstanceConnectableResV1 {
 }
 
 export interface IInstanceResV1 {
+  additional_params?: IInstanceAdditionalParamResV1[];
+
   db_host?: string;
 
   db_port?: string;
@@ -629,6 +744,8 @@ export interface IInstanceResV1 {
   desc?: string;
 
   instance_name?: string;
+
+  maintenance_times?: IMaintenanceTimeResV1[];
 
   role_name_list?: string[];
 
@@ -681,8 +798,44 @@ export interface ILDAPConfigurationResV1 {
   ldap_user_name_rdn_key?: string;
 }
 
+export interface ILicenseItem {
+  description?: string;
+
+  limit?: string;
+
+  name?: string;
+}
+
+export interface IMaintenanceTimeReqV1 {
+  maintenance_start_time?: ITimeReqV1;
+
+  maintenance_stop_time?: ITimeReqV1;
+}
+
+export interface IMaintenanceTimeResV1 {
+  maintenance_start_time?: ITimeResV1;
+
+  maintenance_stop_time?: ITimeResV1;
+}
+
+export interface IOperationResV1 {
+  op_code?: number;
+
+  op_desc?: string;
+}
+
 export interface IPartialSyncAuditPlanSQLsReqV1 {
   audit_plan_sql_list?: IAuditPlanSQLReqV1[];
+}
+
+export interface IPatchUserGroupReqV1 {
+  is_disabled?: boolean;
+
+  role_name_list?: string[];
+
+  user_group_desc?: string;
+
+  user_name_list?: string[];
 }
 
 export interface IRejectWorkflowReqV1 {
@@ -781,6 +934,36 @@ export interface ISystemVariablesResV1 {
   workflow_expired_hours?: number;
 }
 
+export interface ITestWeChatConfigurationReqV1 {
+  recipient_id?: string;
+}
+
+export interface ITestWeChatConfigurationResDataV1 {
+  is_wechat_send_normal?: boolean;
+
+  send_error_message?: string;
+}
+
+export interface ITestWeChatConfigurationResV1 {
+  code?: number;
+
+  data?: ITestWeChatConfigurationResDataV1;
+
+  message?: string;
+}
+
+export interface ITimeReqV1 {
+  hour?: number;
+
+  minute?: number;
+}
+
+export interface ITimeResV1 {
+  hour?: number;
+
+  minute?: number;
+}
+
 export interface ITriggerAuditPlanResV1 {
   code?: number;
 
@@ -819,9 +1002,13 @@ export interface IUpdateCurrentUserPasswordReqV1 {
 
 export interface IUpdateCurrentUserReqV1 {
   email?: string;
+
+  wechat_id?: string;
 }
 
 export interface IUpdateInstanceReqV1 {
+  additional_params?: IInstanceAdditionalParamReqV1[];
+
   db_host?: string;
 
   db_password?: string;
@@ -833,6 +1020,8 @@ export interface IUpdateInstanceReqV1 {
   db_user?: string;
 
   desc?: string;
+
+  maintenance_times?: IMaintenanceTimeReqV1[];
 
   role_name_list?: string[];
 
@@ -878,7 +1067,27 @@ export interface IUpdateSystemVariablesReqV1 {
 export interface IUpdateUserReqV1 {
   email?: string;
 
+  is_disabled?: boolean;
+
   role_name_list?: string[];
+
+  user_group_name_list?: string[];
+
+  wechat_id?: string;
+}
+
+export interface IUpdateWeChatConfigurationReqV1 {
+  agent_id?: number;
+
+  corp_id?: string;
+
+  corp_secret?: string;
+
+  enable_wechat_notify?: boolean;
+
+  proxy_ip?: string;
+
+  safe_enabled?: boolean;
 }
 
 export interface IUpdateWorkflowReqV1 {
@@ -904,11 +1113,33 @@ export interface IUserDetailResV1 {
 
   is_admin?: boolean;
 
+  is_disabled?: boolean;
+
   login_type?: string;
 
   role_name_list?: string[];
 
+  user_group_name_list?: string[];
+
   user_name?: string;
+
+  wechat_id?: string;
+}
+
+export interface IUserGroupListItemResV1 {
+  is_disabled?: boolean;
+
+  role_name_list?: string[];
+
+  user_group_desc?: string;
+
+  user_group_name?: string;
+
+  user_name_list?: string[];
+}
+
+export interface IUserGroupTipListItem {
+  user_group_name?: string;
 }
 
 export interface IUserLoginReqV1 {
@@ -924,15 +1155,33 @@ export interface IUserLoginResV1 {
 export interface IUserResV1 {
   email?: string;
 
+  is_disabled?: boolean;
+
   login_type?: string;
 
   role_name_list?: string[];
 
+  user_group_name_list?: string[];
+
   user_name?: string;
+
+  wechat_id?: string;
 }
 
 export interface IUserTipResV1 {
   user_name?: string;
+}
+
+export interface IWeChatConfigurationResV1 {
+  agent_id?: number;
+
+  corp_id?: string;
+
+  enable_wechat_notify?: boolean;
+
+  proxy_ip?: string;
+
+  safe_enabled?: boolean;
 }
 
 export interface IWorkFlowStepTemplateReqV1 {
@@ -976,6 +1225,8 @@ export interface IWorkflowDetailResV1 {
 
   task_pass_rate?: number;
 
+  task_score?: number;
+
   workflow_id?: number;
 }
 
@@ -999,6 +1250,8 @@ export interface IWorkflowResV1 {
   create_user_name?: string;
 
   desc?: string;
+
+  instance_maintenance_times?: IMaintenanceTimeResV1[];
 
   record?: IWorkflowRecordResV1;
 
@@ -1083,6 +1336,20 @@ export interface IAuditPlanSQLResV2 {
   }>;
 }
 
+export interface ICreateRoleReqV2 {
+  instance_name_list?: string[];
+
+  operation_code_list?: number[];
+
+  role_desc?: string;
+
+  role_name?: string;
+
+  user_group_name_list?: string[];
+
+  user_name_list?: string[];
+}
+
 export interface IGetAuditPlanReportSQLsResV2 {
   code?: number;
 
@@ -1101,4 +1368,50 @@ export interface IGetAuditPlanSQLsResV2 {
   message?: string;
 
   total_nums?: number;
+}
+
+export interface IGetRolesResV2 {
+  code?: number;
+
+  data?: IRoleResV2[];
+
+  message?: string;
+
+  total_nums?: number;
+}
+
+export interface IOperation {
+  op_code?: number;
+
+  op_desc?: string;
+}
+
+export interface IRoleResV2 {
+  instance_name_list?: string[];
+
+  is_disabled?: boolean;
+
+  operation_list?: IOperation[];
+
+  role_desc?: string;
+
+  role_name?: string;
+
+  user_group_name_list?: string[];
+
+  user_name_list?: string[];
+}
+
+export interface IUpdateRoleReqV2 {
+  instance_name_list?: string[];
+
+  is_disabled?: boolean;
+
+  operation_code_list?: number[];
+
+  role_desc?: string;
+
+  user_group_name_list?: string[];
+
+  user_name_list?: string[];
 }

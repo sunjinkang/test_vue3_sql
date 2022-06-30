@@ -80,6 +80,7 @@ export default defineComponent({
                     .then((res: any) => {
                         if (res.data.code === 0) {
                             userStore.updateToken(res.data.data?.token ?? '');
+                            userStore.updateUser({ username: loginForm.username, role: ''});
                             router.push('/platform/user');
                         }
                     });
