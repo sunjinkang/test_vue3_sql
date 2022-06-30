@@ -62,7 +62,7 @@ import { useUserManageStore } from '../../../../../store/userManage';
 import { ModalName } from '../../../../../data/ModalName';
 import useRole from '../../../../../hooks/useRole';
 import useUserGroup from '../../../../../hooks/useUserGroup';
-import { IRoleTipResV1 } from '../../../../../api/common';
+
 export default defineComponent({
   name: 'UserForm',
   props: ['isUpdate', 'isAdmin', 'dialogVisible', 'selectUser'],
