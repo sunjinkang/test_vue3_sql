@@ -24,35 +24,13 @@
 <script lang="ts">
 import Header from './components/Header/index.vue';
 import Menu from './components/Menu/index.vue';
-import { defineComponent, onMounted, reactive, watch } from 'vue';
-import user from '../../api/user';
-import { useUserStore } from '../../store/user';
+import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'Container',
   components: {
     Header,
     Menu,
   },
-  // setup() {
-  //   const getUserInfo = () => {
-  //     user.getCurrentUserV1().then((res) => {
-  //       console.log(res);
-  //     });
-  //   }
-
-  //   onMounted(() => {
-  //     const userStore = useUserStore();
-  //     console.log(userStore);
-  //     const tokenData = reactive({
-  //       token: userStore.token
-  //     });
-  
-  //     watch(tokenData, () => {
-  //       getUserInfo();
-  //     });
-  //   });
-
-  // }
 });
 </script>
 <style lang="less">
@@ -63,7 +41,7 @@ export default defineComponent({
     height: 40px;
     line-height: 40px;
   }
-  .el-scrollbar__view{
+  .el-scrollbar__view {
     height: 100%;
   }
   .menu-icon {

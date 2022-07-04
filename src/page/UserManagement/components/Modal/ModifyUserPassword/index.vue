@@ -1,10 +1,11 @@
 <template>
-  <el-dialog
-    v-model="visible"
-    title="修改密码"
-    :before-close="handleClose"
-  >
-    <el-form :model="passwordForm" ref="passwordFormRef" :rules="rules" label-width="120px">
+  <el-dialog v-model="visible" title="修改密码" :before-close="handleClose">
+    <el-form
+      :model="passwordForm"
+      ref="passwordFormRef"
+      :rules="rules"
+      label-width="120px"
+    >
       <el-form-item label="密码" prop="password">
         <el-input v-model="passwordForm.password" type="password" />
       </el-form-item>
@@ -40,7 +41,7 @@ export default defineComponent({
       passwordConfirm: '',
     });
     let dialogVisible = reactive({
-      visible: false
+      visible: false,
     });
 
     const rules = reactive<FormRules>({
@@ -60,12 +61,12 @@ export default defineComponent({
         {
           validator: (rule: any, value: any, callback: any) => {
             if (value !== passwordForm.password) {
-              callback(new Error("密码不一致"))
+              callback(new Error('密码不一致'));
             } else {
-              callback()
+              callback();
             }
-          }
-        }
+          },
+        },
       ],
     });
 
@@ -83,32 +84,37 @@ export default defineComponent({
       formEl.validate((valid: boolean) => {
         if (valid) {
           console.log(passwordForm);
-          userService.UpdateOtherUserPasswordV1({
-            user_name: useUserManage.selectUser?.user_name ?? '',
-            password: passwordForm.password,
-          })
-          .then((res) => {
-            if (res.data.code === ResponseCode.SUCCESS) {
-              ElMessage({
-                message: '修改密码成功！',
-                type: 'success',
-              });
-              handleClose(undefined);
-              useUserManage.updateRefreshStatus();
-            }
-          });
+          userService
+            .UpdateOtherUserPasswordV1({
+              user_name: useUserManage.selectUser?.user_name ?? '',
+              password: passwordForm.password,
+            })
+            .then((res) => {
+              if (res.data.code === ResponseCode.SUCCESS) {
+                ElMessage({
+                  message: '修改密码成功！',
+                  type: 'success',
+                });
+                handleClose(undefined);
+                useUserManage.updateRefreshStatus();
+              }
+            });
         }
       });
-    }
+    };
 
-    watch(() => useUserManage.modalStatus[ModalName.Update_User_Password], (val, preVal) => {
-      if (val !== preVal && val) {
-        dialogVisible.visible = val;
+    watch(
+      () => useUserManage.modalStatus[ModalName.Update_User_Password],
+      (val, preVal) => {
+        if (val !== preVal && val) {
+          dialogVisible.visible = val;
+        }
+      },
+      {
+        immediate: true,
+        deep: true,
       }
-    }, {
-      immediate: true,
-      deep: true,
-    });
+    );
 
     return {
       ...toRefs(passwordForm),
@@ -118,7 +124,7 @@ export default defineComponent({
       passwordForm,
       rules,
       handleSubmit,
-    }
-  }
+    };
+  },
 });
 </script>

@@ -1,24 +1,20 @@
 <template>
-    <div>Error</div>
+  <div>Error</div>
 </template>
 <script lang="ts">
-    import {
-        defineComponent,
-        reactive,
-        toRefs,
-    } from 'vue';
+import { defineComponent, reactive, toRefs } from 'vue';
 export default defineComponent({
-    setup() {
-        const state = reactive({
-            loginForm: {
-                username: '',
-                password: '',
-            }
-        });
+  setup() {
+    const state = reactive({
+      loginForm: {
+        username: '',
+        password: '',
+      },
+    });
 
-        return {
-            ...toRefs(state),
-        }
-    }
+    return {
+      ...toRefs(state),
+    };
+  },
 });
 </script>

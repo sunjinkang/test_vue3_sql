@@ -4,7 +4,12 @@
     :title="isUpdate ? '修改用户' : '创建用户'"
     :before-close="handleClose"
   >
-    <el-form :model="userForm" ref="userFormRef" :rules="rules" label-width="120px">
+    <el-form
+      :model="userForm"
+      ref="userFormRef"
+      :rules="rules"
+      label-width="120px"
+    >
       <el-form-item label="用户名" prop="username">
         <el-input v-model="userForm.username" :disabled="isUpdate" />
       </el-form-item>
@@ -21,7 +26,11 @@
         <el-input v-model="userForm.wechat" />
       </el-form-item>
       <el-form-item label="角色" prop="roleNameList">
-        <el-select v-model="userForm.roleNameList" class="m-2" placeholder="请选择角色">
+        <el-select
+          v-model="userForm.roleNameList"
+          class="m-2"
+          placeholder="请选择角色"
+        >
           <el-option
             v-for="item in roleList"
             :key="item.role_name"
@@ -31,7 +40,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="所属用户组" prop="userGroupList">
-        <el-select v-model="userForm.userGroupList" class="m-2" placeholder="请选择所属用户组">
+        <el-select
+          v-model="userForm.userGroupList"
+          class="m-2"
+          placeholder="请选择所属用户组"
+        >
           <el-option
             v-for="item in userGroupList"
             :key="item.user_group_name"
@@ -40,7 +53,11 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="禁用用户" v-if="isUpdate && !isAdmin" prop="disabled">
+      <el-form-item
+        label="禁用用户"
+        v-if="isUpdate && !isAdmin"
+        prop="disabled"
+      >
         <el-switch v-model="userForm.disabled" />
       </el-form-item>
     </el-form>
@@ -80,14 +97,8 @@ export default defineComponent({
       userGroupList: [],
       disabled: '',
     });
-    const {
-      list: roleList,
-      updateRoleList,
-    } = useRole();
-    const {
-      group: userGroupList,
-      updateUserGroupList,
-    } = useUserGroup();
+    const { list: roleList, updateRoleList } = useRole();
+    const { group: userGroupList, updateUserGroupList } = useUserGroup();
 
     const nameRules = () => {
       const baseRules = [
@@ -102,9 +113,7 @@ export default defineComponent({
       return [...baseRules, ...nameRule()];
     };
     const rules = reactive<FormRules>({
-      username: [
-        ...nameRules()
-      ],
+      username: [...nameRules()],
       password: [
         {
           required: true,
@@ -121,12 +130,12 @@ export default defineComponent({
         {
           validator: (rule: any, value: any, callback: any) => {
             if (value !== userForm.password) {
-              callback(new Error("密码不一致"))
+              callback(new Error('密码不一致'));
             } else {
-              callback()
+              callback();
             }
-          }
-        }
+          },
+        },
       ],
       email: [
         {
@@ -153,18 +162,22 @@ export default defineComponent({
           context.emit('handleGetData', userForm);
         }
       });
-    }
+    };
 
-    watch([() => props.dialogVisible, () => props.selectUser], (val, preVal) => {
-      if (val[0] !== preVal[0] && val[0] && val[1]) {
-        userForm = { ...val[1] };
-        updateRoleList();
-        updateUserGroupList();
+    watch(
+      [() => props.dialogVisible, () => props.selectUser],
+      (val, preVal) => {
+        if (val[0] !== preVal[0] && val[0] && val[1]) {
+          userForm = { ...val[1] };
+          updateRoleList();
+          updateUserGroupList();
+        }
+      },
+      {
+        immediate: true,
+        deep: true,
       }
-    }, {
-      immediate: true,
-      deep: true
-    });
+    );
 
     return {
       ...toRefs(userForm),
@@ -175,7 +188,7 @@ export default defineComponent({
       handleSubmit,
       roleList,
       userGroupList,
-    }
-  }
+    };
+  },
 });
 </script>

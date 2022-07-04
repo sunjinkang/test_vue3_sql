@@ -29,8 +29,13 @@
     ".vscode/**"
   ],
   "words": [
+    "nums",
     "pinia",
+    "popconfirm",
+    "SQLE",
+    "tnum",
     "vite",
-    "vitejs"
+    "vitejs",
+    "wechat"
   ]
 }

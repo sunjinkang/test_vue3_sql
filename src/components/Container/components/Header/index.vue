@@ -4,7 +4,7 @@
       <el-dropdown>
         <span class="el-dropdown-link">
           <el-icon><user /></el-icon>
-          {{userStore?.username}}
+          {{ userStore?.username }}
         </span>
         <template #dropdown>
           <el-dropdown-menu>
@@ -31,7 +31,7 @@ const logout = () => {
   userStore.updateToken('');
   userStore.updateUser({ username: '', role: '' });
   router.push('/');
-}
+};
 </script>
 <style lang="less">
 .header-top {

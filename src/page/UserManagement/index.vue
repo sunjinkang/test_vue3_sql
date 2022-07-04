@@ -1,11 +1,21 @@
 <template>
-  <page-header title="用户管理" content="你可以在这里管理平台的用户，用户只能看到或操作其已绑定的所有角色中包含的数据源，和其所属的用户组所拥有的所有权限。" />
+  <page-header
+    title="用户管理"
+    content="你可以在这里管理平台的用户，用户只能看到或操作其已绑定的所有角色中包含的数据源，和其所属的用户组所拥有的所有权限。"
+  />
   <section class="padding-content">
     <el-card class="box-card">
       <template #header>
         <div class="card-header">
-          <span>用户列表<el-button :icon="Refresh" plain @click="handleGetUserList" /></span>
-          <el-button type="primary" @click="handleCreateUser">创建用户</el-button>
+          <span
+            >用户列表<el-button
+              :icon="Refresh"
+              plain
+              @click="handleGetUserList"
+          /></span>
+          <el-button type="primary" @click="handleCreateUser"
+            >创建用户</el-button
+          >
         </div>
       </template>
       <div>
@@ -26,24 +36,30 @@ import SearchContent from './components/SearchContent/index.vue';
 import AddUser from './components/Modal/AddUser/index.vue';
 import UpdateUser from './components/Modal/UpdateUser/index.vue';
 import ModifyUserPassword from './components/Modal/ModifyUserPassword/index.vue';
-import {
-  Refresh
-} from '@element-plus/icons-vue';
+import { Refresh } from '@element-plus/icons-vue';
 import UserService from '../../api/user/index';
 import { useUserManageStore } from '../../store/userManage';
 import { ModalName } from '../../data/ModalName';
+import { IUserResV1 } from '../../api/common';
 export default defineComponent({
-  components: { UserTable, PageHeader, SearchContent, AddUser, UpdateUser, ModifyUserPassword },
+  components: {
+    UserTable,
+    PageHeader,
+    SearchContent,
+    AddUser,
+    UpdateUser,
+    ModifyUserPassword,
+  },
   setup() {
     const useUserManage = useUserManageStore();
     let state = reactive({
-      tableData: [],
+      tableData: [] as IUserResV1[],
     });
 
     const handleGetUserList = () => {
       UserService.getUserListV1({
         page_index: 1,
-        page_size: 10
+        page_size: 10,
       }).then((res) => {
         state.tableData = res.data?.data ?? [];
       });
@@ -54,7 +70,7 @@ export default defineComponent({
         modalName: ModalName.Add_User,
         status: true,
       });
-    }
+    };
 
     const handleInitModalStatus = () => {
       useUserManage.initModalStatus({
@@ -64,15 +80,18 @@ export default defineComponent({
       });
     };
 
-    watch(() => useUserManage.refreshTable,
-    (val, preVal) => {
-      if (val !== preVal) {
-        handleGetUserList();
+    watch(
+      () => useUserManage.refreshTable,
+      (val, preVal) => {
+        if (val !== preVal) {
+          handleGetUserList();
+        }
+      },
+      {
+        deep: true,
+        immediate: true,
       }
-    }, {
-      deep: true,
-      immediate: true,
-    });
+    );
 
     onMounted(() => {
       handleGetUserList();
@@ -83,7 +102,7 @@ export default defineComponent({
       ...toRefs(state),
       Refresh,
       handleGetUserList,
-      handleCreateUser
+      handleCreateUser,
     };
   },
 });

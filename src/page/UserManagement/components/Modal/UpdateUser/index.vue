@@ -1,5 +1,11 @@
 <template>
-  <UserForm :dialogVisible="visible" :isUpdate="true" :isAdmin="isAdmin" @handleGetData="handleGetData" :selectUser="selectUser" />
+  <UserForm
+    :dialogVisible="visible"
+    :isUpdate="true"
+    :isAdmin="isAdmin"
+    @handleGetData="handleGetData"
+    :selectUser="selectUser"
+  />
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, watch } from 'vue';
@@ -20,7 +26,7 @@ export default defineComponent({
     const user = reactive({
       isAdmin: userStore.role === SystemRole.admin,
       visible: useUserManage.modalStatus[ModalName.Update_User] ?? false,
-      selectUser: {}
+      selectUser: {},
     });
 
     const handleGetData = (data: any) => {
@@ -36,8 +42,7 @@ export default defineComponent({
       if (data.username !== 'admin') {
         params.is_disabled = !!data.disabled;
       }
-      userService.updateUserV1(params)
-      .then((res) => {
+      userService.updateUserV1(params).then((res) => {
         if (res.data.code === ResponseCode.SUCCESS) {
           ElMessage({
             message: `修改用户${data.username}成功！`,
@@ -49,23 +54,29 @@ export default defineComponent({
           });
           useUserManage.updateRefreshStatus();
         }
-      })
+      });
     };
 
-    watch([() => useUserManage.modalStatus[ModalName.Update_User], () => useUserManage.selectUser],
-    (val, preVal) => {
-      user.visible = val[0] !== preVal[0] && val[0];
-      if (val[1]) {
-        user.selectUser = val[1];
+    watch(
+      [
+        () => useUserManage.modalStatus[ModalName.Update_User],
+        () => useUserManage.selectUser,
+      ],
+      (val, preVal) => {
+        user.visible = val[0] !== preVal[0] && val[0];
+        if (val[1]) {
+          user.selectUser = val[1];
+        }
+      },
+      {
+        deep: true,
+        immediate: true,
       }
-    }, {
-      deep: true,
-      immediate: true,
-    });
+    );
 
     return {
       ...toRefs(user),
-      handleGetData
+      handleGetData,
     };
   },
 });

@@ -26,12 +26,7 @@
   </el-menu>
 </template>
 <script lang="ts" setup>
-import {
-  PieChart,
-  User,
-  MessageBox,
-  Menu as IconMenu,
-} from '@element-plus/icons-vue'
+import { PieChart, User, MessageBox } from '@element-plus/icons-vue';
 </script>
 <style scoped>
 .el-menu {
